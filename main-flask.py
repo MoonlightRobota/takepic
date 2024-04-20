@@ -5,6 +5,8 @@ import requests
 from pathlib import Path
 from openai import OpenAI
 from flask import Flask, send_file
+import ps4controller
+import pyPS4Controller
 
 # Flask setup
 app = Flask(__name__)
@@ -22,6 +24,8 @@ def encode_image(image):
     retval, buffer = cv2.imencode('.jpg', image)
     jpg_as_text = base64.b64encode(buffer).decode('utf-8')
     return jpg_as_text
+
+
 
 def process_image_and_generate_speech():
     cap = cv2.VideoCapture(0)
@@ -83,5 +87,10 @@ def process_image_and_generate_speech():
 
 # Run the Flask app
 if __name__ == '__main__':
+
+    controller = MyController(interface="/dev/input/js0",
+                          connecting_using_ds4drv=False)
+    controller.listen(timeout=60)
+
     app.run(host='0.0.0.0')
     process_image_and_generate_speech()
