@@ -3,6 +3,7 @@ import cv2
 import base64
 import requests
 
+# Get the API key from the environment variable
 api_key = os.getenv("OPENAI_API_KEY")
 
 # Function to encode the image
@@ -63,4 +64,3 @@ payload = {
 response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
 
 print(response.json())
-
