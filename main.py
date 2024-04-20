@@ -76,8 +76,9 @@ content = response.json()["choices"][0]["message"]["content"]
 print(content)
 response = client.audio.speech.create(
   model="tts-1",
-  voice="alloy",
+  voice="shimmer",
   input=content,
 )
 print("Speech created.")
 response.stream_to_file(speech_file_path)
+
