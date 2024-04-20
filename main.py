@@ -2,7 +2,9 @@ import os
 import cv2
 import base64
 import requests
-
+from pathlib import Path
+from openai import OpenAI
+client = OpenAI()
 # Get the API key from the environment variable
 api_key = os.getenv("OPENAI_API_KEY")
 
@@ -47,7 +49,7 @@ payload = {
             "content": [
                 {
                     "type": "text",
-                    "text": "What’s in this image?"
+                    "text": "What’s in this image? in 20 words"
                 },
                 {
                     "type": "image_url",
@@ -64,3 +66,18 @@ payload = {
 response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
 
 print(response.json())
+
+speech_file_path = Path(__file__).parent / "speech.mp3"
+
+print(speech_file_path)
+
+print("Creating speech...")
+content = response.json()["choices"][0]["message"]["content"]
+print(content)
+response = client.audio.speech.create(
+  model="tts-1",
+  voice="alloy",
+  input=content,
+)
+print("Speech created.")
+response.stream_to_file(speech_file_path)
